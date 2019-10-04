@@ -9,7 +9,7 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer, dice, gamePlaying;
+var scores, roundScore, activePlayer, dice, gamePlaying, prevRoll,winValue;
 var diceDOM = document.querySelector('.dice');
 
 initGame();
@@ -25,7 +25,12 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
 	diceDOM.src = 'dice-' + dice + '.png';
     //3. Update the round score IF the rolled number was NOT a 1
 	
-	 if (dice !== 1){
+	if (prevRoll === 6 && dice === 6){
+		scores[activePlayer] = 0;
+		document.getElementById('score-' + activePlayer).textContent = '0';
+		changePlayer();
+	} else if (dice !== 1){
+		prevRoll = dice;
 		roundScore += dice;
 		document.querySelector('#current-' + activePlayer).textContent = roundScore;
 	} else{
@@ -35,8 +40,10 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
 	
 });
 function initGame(){
+	winValue = document.getElementById("win-value").value;
     gamePlaying = true;
-    scores = [0,0];
+    prevRoll = -1;
+	scores = [0,0];
     roundScore = 0;
     activePlayer = 0;
 
@@ -68,6 +75,7 @@ function initGame(){
     diceDOM.style.display = 'none';
 }
 function changePlayer(){
+	prevRoll = -1;
 	diceDOM.style.display = 'none';
 	roundScore = 0;
 	document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
@@ -83,7 +91,7 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
 	roundScore = 0;
 	document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 	
-	if (scores[activePlayer] >= 100){
+	if (scores[activePlayer] >= winValue){
 		document.querySelector('#name-' + activePlayer).textContent = 'WINNER';
 		diceDOM.style.display = 'none';
 		document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');

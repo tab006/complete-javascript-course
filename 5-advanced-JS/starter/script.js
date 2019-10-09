@@ -205,7 +205,7 @@ game();
 
 ///////////////////////////////
 // Lecture: Closures
-
+/*
 function retirement(retirementAge){
 	var a = ' years left until retirement.';
 	return function(yearOfBirth) {
@@ -216,13 +216,19 @@ function retirement(retirementAge){
 
 var retirementUS = retirement(66);
 retirementUS(1990);
+var retirementGermany = 
+retirement(65);
+var retirementIceland = 
+retirement(67);
 
 retirement(66)(1990);
+retirementGermany(1990);
+retirementIceland(1990);
 
 //Result:
 // 40 years left until retirement.
 // (2016 - (2016 - 1990))
-
+*/
 /*
 Closure summary
 An inner function has always access to the variables and parameters of its outer function,
@@ -246,7 +252,7 @@ function interviewQuestions(job){
 		
 }
 */
-
+/*
 function interviewQuestions(job){
 	return function(name){
 		if (job === 'designer'){
@@ -259,3 +265,185 @@ function interviewQuestions(job){
 	  
 	}
 }
+interviewQuestions('teacher')('John');
+*/
+
+///////////////////////////////////
+// Lecture: Bind, call and apply
+
+/*
+var john = {
+    name: 'John',
+    age: 26,
+    job: 'teacher',
+    presentation: function(style, timeOfDay){
+        if (style === 'formal'){
+            console.log('Good ' + timeOfDay + ' , Ladies and gentlement! I\'m a ' + 
+            this.name + ', I\'m a ' + this.job + ' and I\'m ' + this.age + ' years old.');
+        } else if (style === 'friendly') {console.log('Hey! What\'s up? I\'m ' + this.name + 
+        ', I\'m a ' + this.job + 
+        ' and I\'m ' + this.age + 
+        ' years old. Have a nice ' + timeOfDay + '.');
+        }
+    }
+    }
+    
+var emily = {
+    name: 'Emily',
+    age: 35,
+    job: 'designer'
+};
+
+john.presentation('formal', 'morning');
+
+john.presentation.call(emily, 'friendly', 'afternoon');
+
+//john.presentation.apply(emily, ['friendly', 'afternoon'])
+
+var johnFriendly = john.presentation.bind(john, 'friendly');
+
+
+//currying create a function based on another function to create a preset
+johnFriendly('morning');
+johnFriendly('night');
+
+var emilyFormal = john.presentation.bind(emily, 'formal');
+emilyFormal('afternoon');
+
+
+
+
+var years = [1990, 1965, 1937, 2005, 1998];
+
+function arrayCalc(arr, fn){
+	var arrRes = [];
+	for (var i = 0; i < arr.length; i++){
+		arrRes.push(fn(arr[i]));
+	}
+	return arrRes;
+}
+
+function calculateAge(el){
+	return 2019 - el;
+}
+
+function isFullAge(limit, el){
+	return el >= limit;
+}
+
+var ages = arrayCalc(years, calculateAge)
+
+var fullJapan = arrayCalc(ages, isFullAge.bind(this, 20));
+console.log(ages);
+console.log(fullJapan);
+
+
+*/
+
+
+/***************************************
+ CODING CHALLENGE 7
+***************************************/
+
+/*
+--- Let's build a fun quiz game in the console! ---
+
+1. Build a function constructor called Question to describe a question. A question should include:
+a) The question itself
+b) The answers from which the player can choose the correct one (choose an adquate data structure here, array, object, etc.)
+c) Correct anwser (I would use a number for this)
+
+2. Create a couple of questions using the constructor
+
+3. Store them all inside an array
+
+4. Select one random question and log it on the console, together with the possible answers
+(each question should have a number) (Hint: write a method for the Question for this task)
+
+5. Use the 'prompt' function to ask the user for the correct answer. 
+The user should input the number of the correct answer such as you displayed it on task 4. 
+
+6. Check if the answer is correct and print to the console whether the answer is correct or not
+(Hint: write another method for this)
+
+7. Suppose this code would be a plugin for other progrmmers to use in their code.
+So make sure that all your code is private and doesn't interfere with other programmers code
+(Hint: we learned a special teqnique to do exactly that).
+
+--- Expert level ---
+
+8. After you display the result, display the next random question, so that the game never ends
+(Hint: write a function for this and call it right after displaying the result)
+
+9. Be careful: After task 8, the game literally never ends. So include the option to quit
+the game if the user writes 'exit' instead of the answer. In this case, DON'T call the function from task 8
+
+10. Track the user's score to make the game more fun! So each time an answer is correct, add 1 point
+to the score (HINT: I'm going to use the power of closures for this, but you don't have to,
+just do this with the tools you feel more comfortable at this point.)
+
+11. Display the score in the console. Use yet another method for this.
+*/
+
+function Question(desc, answers, solution){
+    this.question = desc;
+    this.answers = answers;
+    this.solution = solution;
+}
+
+Question.prototype.displayQuestion = function(){
+    console.log(this.question);
+    for (var i = 0; i < this.answers.length; i++){
+        console.log(i + ': ' + this.answers[i]);
+    } 
+}
+
+
+var question1 = new Question("Who is da best", ["Tony", "Me", "no u"], 0);
+var question2 = new Question("The true answer", ["1337", "42", "69"], 1);
+
+var questions = [];
+questions.push(question1);
+questions.push(question2);
+var currentQuestion = Math.floor(Math.random() * questions.length);
+console.log(currentQuestion);
+
+questions[currentQuestion].displayQuestion();
+var playerChoice = parseInt(prompt('Please select the right answer'));
+
+Question.prototype.checkAnswer = function(ans){
+    if (ans === this.solution) {
+        console.log("Correct answer :)");
+    } else {
+        console.log("Wrong answer :( Try again!");
+    }
+
+}
+
+questions[currentQuestion].checkAnswer(playerChoice);
+
+/*
+function displayQuestion(quest){
+    console.log(quest.question);
+    for (var i = 0; i < quest.answers.length; i++){
+        console.log(i + ': ' + quest.answers[i]);
+    }    
+}
+
+
+
+displayQuestion(questions[currentQuestion]);
+var playerChoice = prompt('test');
+function checkAnswer(question, playerChoice){
+    console.log(question.solution);
+    console.log(playerChoice);
+    if (question.solution == playerChoice){
+        return "right answer! :)";
+    } else{
+        return "wrong answer :(";
+    }
+    
+}
+console.log(checkAnswer(questions[currentQuestion], playerChoice));
+
+*/

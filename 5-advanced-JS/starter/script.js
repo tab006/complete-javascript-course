@@ -384,6 +384,15 @@ just do this with the tools you feel more comfortable at this point.)
 
 11. Display the score in the console. Use yet another method for this.
 */
+(function() {
+var question1 = new Question("Who is da best", ["Tony", "Me", "no u"], 0);
+var question2 = new Question("The true answer", ["1337", "42", "69"], 1);
+
+var score = 0;
+var questions = [];
+questions.push(question1);
+questions.push(question2);
+var currentQuestion;	
 
 function Question(desc, answers, solution){
     this.question = desc;
@@ -391,28 +400,8 @@ function Question(desc, answers, solution){
     this.solution = solution;
 }
 
-Question.prototype.displayQuestion = function(){
-    console.log(this.question);
-    for (var i = 0; i < this.answers.length; i++){
-        console.log(i + ': ' + this.answers[i]);
-    } 
-}
-
-
-var question1 = new Question("Who is da best", ["Tony", "Me", "no u"], 0);
-var question2 = new Question("The true answer", ["1337", "42", "69"], 1);
-
-var questions = [];
-questions.push(question1);
-questions.push(question2);
-var currentQuestion = Math.floor(Math.random() * questions.length);
-console.log(currentQuestion);
-
-questions[currentQuestion].displayQuestion();
-var playerChoice = parseInt(prompt('Please select the right answer'));
-
 Question.prototype.checkAnswer = function(ans){
-    if (ans === this.solution) {
+    if (parseInt(ans) === this.solution) {
         console.log("Correct answer :)");
     } else {
         console.log("Wrong answer :( Try again!");
@@ -420,7 +409,28 @@ Question.prototype.checkAnswer = function(ans){
 
 }
 
-questions[currentQuestion].checkAnswer(playerChoice);
+
+	Question.prototype.displayQuestion = function(){
+    console.log(this.question);
+    for (var i = 0; i < this.answers.length; i++){
+        console.log(i + ': ' + this.answers[i]);
+      } 
+  }
+  console.log(currentQuestion);
+
+  currentQuestion = Math.floor(Math.random() * questions.length);
+  questions[currentQuestion].displayQuestion();
+  var playerChoice = prompt('Please select the right answer');
+
+
+
+
+
+questions[currentQuestion].checkAnswer(playerChoice);	
+
+
+})();
+
 
 /*
 function displayQuestion(quest){

@@ -410,20 +410,19 @@ Question.prototype.checkAnswer = function(ans){
 }
 
 
-	Question.prototype.displayQuestion = function(){
+Question.prototype.displayQuestion = function(){
     console.log(this.question);
     for (var i = 0; i < this.answers.length; i++){
         console.log(i + ': ' + this.answers[i]);
-      } 
-  }
-  console.log(currentQuestion);
+    } 
+}
 
-  currentQuestion = Math.floor(Math.random() * questions.length);
-  questions[currentQuestion].displayQuestion();
-  var playerChoice = prompt('Please select the right answer');
+console.log(currentQuestion);
 
+currentQuestion = Math.floor(Math.random() * questions.length);
+questions[currentQuestion].displayQuestion();
 
-
+var playerChoice = prompt('Please select the right answer');
 
 
 questions[currentQuestion].checkAnswer(playerChoice);	

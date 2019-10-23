@@ -384,6 +384,7 @@ just do this with the tools you feel more comfortable at this point.)
 
 11. Display the score in the console. Use yet another method for this.
 */
+/*
 (function() {
 var question1 = new Question("Who is da best", ["Tony", "Me", "no u"], 0);
 var question2 = new Question("The true answer", ["1337", "42", "69"], 1);
@@ -403,6 +404,7 @@ function Question(desc, answers, solution){
 Question.prototype.checkAnswer = function(ans){
     if (parseInt(ans) === this.solution) {
         console.log("Correct answer :)");
+		score++;
     } else {
         console.log("Wrong answer :( Try again!");
     }
@@ -410,28 +412,34 @@ Question.prototype.checkAnswer = function(ans){
 }
 
 
-	Question.prototype.displayQuestion = function(){
+
+Question.prototype.displayQuestion = function(){
     console.log(this.question);
+	console.log("Current score: " + score);
     for (var i = 0; i < this.answers.length; i++){
         console.log(i + ': ' + this.answers[i]);
-      } 
-  }
-  console.log(currentQuestion);
+    } 
+}
+var gamePlaying = true;
+while(gamePlaying){
+console.log(currentQuestion);
 
-  currentQuestion = Math.floor(Math.random() * questions.length);
-  questions[currentQuestion].displayQuestion();
-  var playerChoice = prompt('Please select the right answer');
+currentQuestion = Math.floor(Math.random() * questions.length);
+questions[currentQuestion].displayQuestion();
+var playerChoice = prompt('Please select the right answer');
 
-
-
+if (playerChoice === "exit"){
+	gamePlaying = false;
+	continue;
+}
 
 
 questions[currentQuestion].checkAnswer(playerChoice);	
 
-
+}
 })();
 
-
+*/
 /*
 function displayQuestion(quest){
     console.log(quest.question);
@@ -457,3 +465,79 @@ function checkAnswer(question, playerChoice){
 console.log(checkAnswer(questions[currentQuestion], playerChoice));
 
 */
+
+
+(function() {
+var question1 = new Question("Who is da best", ["Tony", "Me", "no u"], 0);
+var question2 = new Question("The true answer", ["1337", "42", "69"], 1);
+
+
+
+var questions = [];
+questions.push(question1);
+questions.push(question2);
+var currentQuestion;	
+
+function Question(desc, answers, solution){
+    this.question = desc;
+    this.answers = answers;
+    this.solution = solution;
+}
+
+function score() {
+	var scr = 0;
+	return function(ans){
+		if (ans){
+			scr++;
+		}
+		return scr;
+	}
+}
+var playScore = score();
+function nextQuestion() {
+
+  currentQuestion = Math.floor(Math.random() * questions.length);
+  questions[currentQuestion].displayQuestion();
+  var playerChoice = prompt('Please select the right answer');
+
+  if (playerChoice !== "exit"){
+    questions[currentQuestion].checkAnswer(playerChoice, playScore);
+    nextQuestion();
+  } else {
+	console.log("Final score: " + playScore());
+  }
+
+
+}	
+
+
+Question.prototype.checkAnswer = function(ans, callback){
+	var score;
+    if (parseInt(ans) === this.solution) {
+        console.log("Correct answer :)");
+		score = callback(true);
+
+    } else {
+        console.log("Wrong answer :( Try again!");
+		score = callback(false);
+    }
+	this.displayScore(score);
+
+}
+Question.prototype.displayScore = function (score) {
+	console.log("Current score: " + score);
+}
+
+
+
+Question.prototype.displayQuestion = function(){
+    console.log(this.question);
+    for (var i = 0; i < this.answers.length; i++){
+        console.log(i + ': ' + this.answers[i]);
+    } 
+}
+var gamePlaying = true;
+nextQuestion();
+
+
+})();
